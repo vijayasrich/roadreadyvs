@@ -1,0 +1,45 @@
+.reservation-list {
+  padding: 20px;
+}
+
+.reservation-card {
+  background-color: white;  /* Set the background color to white */
+  border: 1px solid #ddd;  /* Optional: Adding a light border for better visibility */
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;  /* Optional: rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* Optional: Adding a subtle shadow for better contrast */
+}
+
+.reservation-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.reservation-card p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  font-size: 14px;
+}
+

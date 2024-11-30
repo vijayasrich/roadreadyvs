@@ -1,24 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Register from "./components/Register";
+import PrivateRoute from "./utils/PrivateRoute";
+import { AuthProvider } from "./utils/AuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Home from "./components/Home";
+import ReservationList from "./components/ReservationList";
+import CarExtraList from "./components/CarExtraList";
+import CarList from "./components/CarList";
+import PaymentList from "./components/PaymentList";
+import ReviewList from "./components/ReviewList";
+import UserList from "./components/UserList";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AuthProvider>
+        <div className="page-container">
+          <Header />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route element={<PrivateRoute />}>
+              <Route path="/reservations" element={<ReservationList />} />
+              <Route path="/carextras" element={<CarExtraList />} />
+              <Route path="/cars" element={<CarList />} />
+              <Route path="/payments" element={<PaymentList />} />
+              <Route path="/reviews" element={<ReviewList />} />
+              <Route path="/users" element={<UserList />} />
+              {/*<Route path="/cars" element={<CarList />} />
+              <Route path="/carextras" element={<CarExtraList />} />
+              <Route path="/users" element={<UserList />} />
+              <Route path="/reviews" element={<ReviewList />} />
+              <Route path="/reservations" element={<ReservationList />} />
+              <Route path="/payments" element={<PaymentList />} />
+              <Route path="/reset-password" element={<PasswordResetEmail />} />
+                <Route path="/reset-passwordtoken" element={<PasswordResetForm />} />
+
+                <Route path="/products" element={<ProductList />} />*/}
+              </Route>
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+        <ToastContainer />
+      </AuthProvider>
+    </Router>
   );
 }
 

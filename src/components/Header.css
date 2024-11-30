@@ -1,0 +1,71 @@
+/* header.css */
+
+/* Header styling for all pages */
+header {
+    background-color: #000000; /* Same background as before */
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between; /* Space between logo and navigation */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    height: 50px; /* Define a height for the header */
+  }
+  
+  /* Styling for logo */
+  header .logo {
+    display: flex;
+    align-items: center; /* Align logo vertically */
+  }
+  
+  /* Styling for navigation */
+  header nav {
+    display: flex;
+    justify-content: flex-end; /* Align navigation items to the right */
+  }
+  
+  header nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 20px; /* Space out the nav items */
+  }
+  
+  header nav ul li {
+    display: inline;
+  }
+  
+  header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  header nav ul li a:hover {
+    background-color: #fff;
+    color: #0D0821; /* Change text color on hover */
+  }
+  
+  header nav ul li button {
+    background-color: #ff4d4d; /* Red color for logout button */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  header nav ul li button:hover {
+    background-color: #e63946; /* Darker red on hover */
+  }
+  
