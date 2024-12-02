@@ -12,7 +12,7 @@ const Header = () => {
     localStorage.setItem("token", "");
     navigate("/login");
   };
-
+  
   return (
     <header>
       <nav>
@@ -21,22 +21,23 @@ const Header = () => {
             <Link to="/">Home</Link>
           </li>
           {!auth ? (
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            
+            <>
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+              <li>
+                <Link to="/register">Register</Link>
+              </li>
+            </>
           ) : (
             <li>
               <button onClick={handleLogout}>Logout</button>
             </li>
           )}
-            <li>
-                <Link to="/reset-password">Reset Password</Link>
-            </li>
-          
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
+          {/*<li>
+            <Link to="/reset-password">Reset Password</Link>
+          </li>*/}
+
           {auth && (
             <>
               <li>
@@ -45,21 +46,22 @@ const Header = () => {
               <li>
                 <Link to="/cars">Cars</Link>
               </li>
-              {/* Render User List link only if the user is an admin */}
               
-              <li>
-                <Link to="/users">Users</Link>
-              </li>
               <li>
                 <Link to="/reviews">Reviews</Link>
               </li>
               <li>
-                <Link to="/reservations">Reservations</Link>
+                <Link to="/add-reservation">Booking</Link>
               </li>
               <li>
-                <Link to="/payments">Payment</Link>
+                <Link to="/reservations">Reservation History</Link>
               </li>
-              
+              <li>
+                <Link to="/payments">Payment History</Link>
+              </li>
+              <li>
+                <Link to="/users">User Details</Link>
+              </li>
             </>
           )}
         </ul>

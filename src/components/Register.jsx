@@ -96,6 +96,11 @@ const Register = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
+
+        {/* "Already have an account? Login here" text */}
+        <div className="login-link">
+          <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
       </form>
     </div>
   );

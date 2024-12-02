@@ -1,47 +1,57 @@
 import React, { useState, useEffect } from "react";
-import { getUsers } from "../services/UserService"; // Ensure this is correctly imported
+import { getUsers,getUserById  } from "../services/UserService"; // Ensure this is correctly imported
 import "./UserList.css"; // Import your CSS file
 
-const UserList = () => {
+
+
+const UserList = ({ isAdmin }) => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getUsers(); // Fetch users from the API
-        setUsers(data); // Update state with the users data
-      } catch (error) {
-        setError("Failed to load users");
-      } finally {
-        setLoading(false);
+        if (isAdmin) {
+          const userList = await getUsers();
+          setUsers(userList);
+        } else {
+          const user = await getUserById();
+          setUsers([user]); // Wrapping in an array for consistent rendering
+        }
+      } catch (err) {
+        setError("Failed to fetch user details. Please try again later.");
+        console.error(err);
       }
     };
-    fetchUsers();
-  }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+    fetchData();
+  }, [isAdmin]);
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="user-list">
-      {users.length === 0 ? (
-        <p>No users found</p>
-      ) : (
-        <div className="card-container">
-          {users.map((user) => (
-            <div className="card" key={user.userId}>
-              <h2>{user.firstName} {user.lastName}</h2>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Username:</strong> {user.userName}</p>
-              <p><strong>Phone:</strong> {user.phoneNumber}</p>
-            </div>
-          ))}
+      {users.map((user) => (
+        <div className="user-card" key={user.id}>
+          <h2>
+            {user.firstName} {user.lastName}
+          </h2>
+          <p>
+            <strong>Email:</strong> {user.email}
+          </p>
+          <p>
+            <strong>Username:</strong> {user.userName}
+          </p>
+          <p>
+            <strong>Phone:</strong> {user.phoneNumber}
+          </p>
         </div>
-      )}
+      ))}
     </div>
   );
 };
 
 export default UserList;
+

@@ -30,6 +30,7 @@ const CarExtraList = () => {
               <h2>{carExtra.name}</h2>
               <p>{carExtra.description}</p>
               <p>Price: ${carExtra.price}</p>
+              <p>Extra ID: {carExtra.extraId}</p> 
               <button>Add to Reservation</button> {/* Example button for interaction */}
             </div>
           ))

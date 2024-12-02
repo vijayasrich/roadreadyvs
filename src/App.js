@@ -11,10 +11,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./components/Home";
 import ReservationList from "./components/ReservationList";
+import AddReservation from "./components/AddReservation";
 import CarExtraList from "./components/CarExtraList";
 import CarList from "./components/CarList";
 import PaymentList from "./components/PaymentList";
 import ReviewList from "./components/ReviewList";
+import AddReviewPage from "./components/AddReview";
 import UserList from "./components/UserList";
 
 function App() {
@@ -30,10 +32,12 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route element={<PrivateRoute />}>
               <Route path="/reservations" element={<ReservationList />} />
+              <Route path="/add-reservation" element={<AddReservation />} />
               <Route path="/carextras" element={<CarExtraList />} />
               <Route path="/cars" element={<CarList />} />
               <Route path="/payments" element={<PaymentList />} />
               <Route path="/reviews" element={<ReviewList />} />
+              <Route path="/add-review" element={<AddReviewPage />} />
               <Route path="/users" element={<UserList />} />
               {/*<Route path="/cars" element={<CarList />} />
               <Route path="/carextras" element={<CarExtraList />} />

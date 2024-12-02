@@ -1,11 +1,12 @@
-import axios from "axios";
+import axios from 'axios';
 
 const API_URL = "https://localhost:7020/api/Reservations";
 
-const getReservations = async () => {
+// Get reservations by UserId
+const getReservationsByUserId = async (userId) => {
   try {
-    const token = localStorage.getItem("token"); // Retrieve token from localStorage
-    const response = await axios.get(API_URL, {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/user/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -17,70 +18,51 @@ const getReservations = async () => {
   }
 };
 
-const getReservationById = async (id) => {
+// Get all reservations
+const getAllReservations = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_URL}/${id}`, {
+    const response = await axios.get(API_URL, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
   } catch (error) {
-    console.error(`Error fetching reservation with ID ${id}:`, error);
+    console.error("Error fetching all reservations:", error);
     throw error;
   }
 };
-
-const addReservation = async (reservation) => {
+const addReservation = async (reservationData) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.post(API_URL, reservation, {
+    const response = await axios.post(API_URL, reservationData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
-    return response.data; // Return the created reservation data
+    return response.data;
   } catch (error) {
     console.error("Error adding reservation:", error);
     throw error;
   }
 };
 
-const updateReservation = async (id, reservation) => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.put(`${API_URL}/${id}`, reservation, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data; // Return the updated reservation data
-  } catch (error) {
-    console.error(`Error updating reservation with ID ${id}:`, error);
-    throw error;
-  }
+// Calculate total price based on car cost and extra charges
+const calculateTotalPrice = (pickupDate, dropoffDate, carCostPerDay, extraIds) => {
+  const diffInTime = new Date(dropoffDate).getTime() - new Date(pickupDate).getTime();
+  const diffInDays = diffInTime / (1000 * 3600 * 24);
+
+  // Calculate extra cost from extraIds
+  let extraCost = 0;
+  extraIds.forEach((extraId) => {
+    extraCost += 10; // Assume each extra has a fixed cost, change this to your logic
+  });
+
+  // Total price logic
+  const totalPrice = carCostPerDay * diffInDays + extraCost;
+  return totalPrice;
 };
 
-const deleteReservation = async (id) => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.delete(`${API_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data; // Return confirmation of deletion
-  } catch (error) {
-    console.error(`Error deleting reservation with ID ${id}:`, error);
-    throw error;
-  }
-};
-
-export {
-  getReservations,
-  getReservationById,
-  addReservation,
-  updateReservation,
-  deleteReservation,
-};
+export { getReservationsByUserId, getAllReservations,addReservation,calculateTotalPrice};

@@ -1,45 +1,47 @@
+/* Container for the reservation list */
 .reservation-list {
-  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-around;
 }
 
+/* Individual reservation card */
 .reservation-card {
-  background-color: white;  /* Set the background color to white */
-  border: 1px solid #ddd;  /* Optional: Adding a light border for better visibility */
-  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.reservation-card:hover {
+  transform: scale(1.05);
+}
+
+/* Header style */
+.reservation-header {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 4px;
   margin-bottom: 15px;
-  border-radius: 8px;  /* Optional: rounded corners */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* Optional: Adding a subtle shadow for better contrast */
+  text-align: center;
 }
 
-.reservation-card h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.reservation-header h3 {
+  margin: 0;
 }
 
-.reservation-card p {
-  font-size: 14px;
+/* Body style */
+.reservation-body p {
   margin: 5px 0;
-}
-
-button {
-  padding: 10px 15px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   font-size: 14px;
 }
 
-button:hover {
-  background-color: #45a049;
+/* Styling for error and no reservation messages */
+.error-message, .no-reservations {
+  text-align: center;
+  color: red;
 }
-
-ul {
-  padding-left: 20px;
-}
-
-li {
-  font-size: 14px;
-}
-

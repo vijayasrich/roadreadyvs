@@ -1,64 +1,42 @@
-/* General styles */
 .user-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  /* Container to hold the cards */
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center; /* Center the cards */
-    max-width: 1200px; /* Optional: Set max width for the card container */
-  }
-  
-  /* Individual card style */
-  .card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    width: 200px; /* Width of each card */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-  }
-  
-  /* Add hover effect for cards */
-  .card:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Card content styles */
-  .card h2 {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .card p {
-    font-size: 14px;
-    color: #555;
-    margin: 5px 0;
-  }
-  
-  .card p strong {
-    color: #000;
-  }
-  
-  /* Responsive styling to ensure 2 cards per row on medium screens */
-  @media (min-width: 768px) {
-    .card {
-      width: 45%; /* Two cards per row */
-    }
-  }
-  
-  /* For larger screens */
-  @media (min-width: 1024px) {
-    .card {
-      width: 30%; /* Three cards per row */
-    }
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.user-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  max-width: 300px;
+  width: 100%;
+  text-align: center;
+}
+
+.user-card h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.user-card p {
+  font-size: 1rem;
+  color: #555;
+  margin: 8px 0;
+}
+
+.user-card p strong {
+  color: #000;
+}
+
+.error {
+  color: red;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 20px;
+}

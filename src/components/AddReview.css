@@ -1,0 +1,68 @@
+/* AddReviewPage.css */
+.add-review-page {
+    width: 80%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-review-page h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .add-review-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .add-review-page input,
+  .add-review-page textarea,
+  .add-review-page button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+  }
+  
+  .add-review-page input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+  }
+  
+  .add-review-page input:focus,
+  .add-review-page textarea:focus,
+  .add-review-page button:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .add-review-page textarea {
+    resize: vertical;
+    height: 150px;
+  }
+  
+  .add-review-page button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .add-review-page button:hover {
+    background-color: #0056b3;
+  }
+  
+  .add-review-page button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  
