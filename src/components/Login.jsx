@@ -4,13 +4,29 @@ import { toast } from "react-toastify";
 import AuthContext from "../utils/AuthContext";
 import { login as loginService } from "../services/AuthService";
 import "./Login.css";
-
+import axios from "axios";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const handleLogin = async (credentials) => {
+    try {
+        const response = await axios.post('https://localhost:7020/api/Login', credentials);
+        
+        if (response.data.token) {
+            // Store the token and userId in localStorage
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userId', response.data.userId); // Store userId
+            toast.success('Login successful!');
+            navigate('/dashboard');
+        } else {
+            toast.error('Login failed');
+        }
+    } catch (error) {
+        toast.error('Login failed, please try again!');
+    }
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
