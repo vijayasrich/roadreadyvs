@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { getReviews } from "../services/ReviewService"; // Importing the service
 import { useNavigate } from "react-router-dom"; // For navigation
+import AuthContext from "../utils/AuthContext"; // Importing the AuthContext to access user role
 import "./ReviewList.css"; // Importing the CSS file
 
 const ReviewList = () => {
   const [reviews, setReviews] = useState([]);
+  const { userRole } = useContext(AuthContext); // Accessing the userRole from AuthContext
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,7 +40,10 @@ const ReviewList = () => {
         ))}
       </ul>
 
-      <button onClick={handleAddReviewClick}>Add Review</button>
+      {/* Conditionally render the Add Review button based on user role */}
+      {userRole === "Customer" && (
+        <button onClick={handleAddReviewClick}>Add Review</button>
+      )}
     </div>
   );
 };

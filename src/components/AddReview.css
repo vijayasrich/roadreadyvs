@@ -1,6 +1,5 @@
-/* AddReviewPage.css */
 .add-review-page {
-    width: 80%;
+    width: 100%;
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
@@ -11,58 +10,89 @@
   
   .add-review-page h2 {
     text-align: center;
-    color: #333;
     margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
   }
   
-  .add-review-page form {
+  form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
   }
   
-  .add-review-page input,
-  .add-review-page textarea,
-  .add-review-page button {
+  select,
+  input[type="number"],
+  textarea {
+    margin-bottom: 15px;
     padding: 10px;
+    font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
+    box-sizing: border-box;
   }
   
-  .add-review-page input[type="number"] {
-    -webkit-appearance: none;
-    -moz-appearance: textfield;
-  }
-  
-  .add-review-page input:focus,
-  .add-review-page textarea:focus,
-  .add-review-page button:focus {
+  select:focus,
+  input[type="number"]:focus,
+  textarea:focus {
+    border-color: #4CAF50;
     outline: none;
-    border-color: #007bff;
   }
   
-  .add-review-page textarea {
+  textarea {
     resize: vertical;
-    height: 150px;
+    min-height: 100px;
   }
   
-  .add-review-page button {
-    background-color: #007bff;
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
     color: white;
     border: none;
+    border-radius: 4px;
+    font-size: 16px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
   }
   
-  .add-review-page button:hover {
-    background-color: #0056b3;
-  }
-  
-  .add-review-page button:disabled {
-    background-color: #aaa;
+  button:disabled {
+    background-color: #ccc;
     cursor: not-allowed;
   }
+  
+  button:hover:not(:disabled) {
+    background-color: #45a049;
+  }
+  
+  .add-review-page p {
+    text-align: center;
+    font-size: 16px;
+    color: #e74c3c;
+    margin-top: 10px;
+  }
+  
+  option {
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .add-review-page {
+      padding: 15px;
+    }
+  
+    .add-review-page h2 {
+      font-size: 20px;
+    }
+  
+    select,
+    input[type="number"],
+    textarea {
+      font-size: 14px;
+    }
+  
+    button {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
+  
   

@@ -26,6 +26,9 @@ const Login = () => {
       }
     }
   };
+  const handleResetPasswordClick = () => {
+    navigate('/reset-password');
+  };
 
   return (
     <div className="login-container">
@@ -59,6 +62,9 @@ const Login = () => {
               Login
             </button>
           </div>
+          <button onClick={handleResetPasswordClick} className="reset-password-btn">
+        Reset Password
+      </button>
         
         {/* Registration Link */}
         <p className="register-link">

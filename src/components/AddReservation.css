@@ -43,3 +43,17 @@
   color: red;
   font-size: 14px;
 }
+.car-extras {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Creates 2 equal-width columns */
+  gap: 20px; /* Space between items */
+}
+
+.car-extra-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.car-extra-checkbox input {
+  margin-right: 10px; /* Space between checkbox and label */
+}

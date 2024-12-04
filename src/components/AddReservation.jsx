@@ -5,20 +5,23 @@ import { getAllCarExtras } from "../services/CarExtraService"; // Import CarExtr
 import ClipLoader from "react-spinners/ClipLoader"; // To show a loading spinner
 import moment from "moment"; // To calculate date differences easily
 import "./AddReservation.css"; // Add your styling here
+import { jwtDecode } from "jwt-decode";
 
-const AddReservation = () => {
+const AddReservation =({ onReservationAdded }) =>{
   const [cars, setCars] = useState([]); // State to store car data
   const [carExtras, setCarExtras] = useState([]); // State to store car extras
   const [selectedCar, setSelectedCar] = useState(null); // State to store selected car
   const [selectedExtras, setSelectedExtras] = useState([]); // State for selected car extras
   const [loading, setLoading] = useState(false); // State for loading status
   const [totalPrice, setTotalPrice] = useState(0); // State to store the total price
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [formData, setFormData] = useState({
     pickupDate: new Date().toISOString().slice(0, 16),
     dropoffDate: new Date().toISOString().slice(0, 16),
     carId: "",
     extras: [],
-    status: "Pending", // Default status is Pending
+    status: "Pending", 
+    paymentMethod: "",// Default status is Pending
   });
 
   // Fetch cars and car extras on component mount
@@ -55,11 +58,10 @@ const AddReservation = () => {
 
   // Handle car selection
   const handleCarSelect = (carId) => {
-    console.log("Car Selected:", carId);
-    setSelectedCar(carId);
-    setFormData({ ...formData, carId });
+    setSelectedCar(Number(carId)); // Convert to number
+    setFormData((prevFormData) => ({ ...prevFormData, carId: Number(carId) }));
   };
-
+  
   // Handle car extra selection
   const handleExtraSelect = (extraId) => {
     setSelectedExtras((prevExtras) =>
@@ -78,13 +80,10 @@ const AddReservation = () => {
     }
 
     // Find the selected car
-    const car = cars.find((car) => car.carId === selectedCar);
-    if (!car) {
-      console.error("Car not found with ID:", selectedCar);
-      setTotalPrice(0);
-      return;
-    }
-
+    const car = cars.find((car) => car.carId === Number(selectedCar));
+if (!car) {
+  console.error("Car not found with ID:", selectedCar);
+}
     // Calculate the number of days
     const days = moment(formData.dropoffDate).diff(moment(formData.pickupDate), "days");
     if (days < 1) {
@@ -103,20 +102,60 @@ const AddReservation = () => {
 
     setTotalPrice(price);
   };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Send reservation data to the backend (to be implemented)
-    console.log("Reservation Submitted: ", formData);
-    toast.success("Reservation added successfully!");
-  };
-
+ 
+  
   // Trigger price recalculation whenever there are changes in form data
   useEffect(() => {
     calculateTotalPrice();
   }, [selectedCar, selectedExtras, formData.pickupDate, formData.dropoffDate]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Check if the payment method is selected
+    if (!paymentMethod) {
+      toast.error("Please select a payment method.");
+      return;
+    }
+    // Check if the user is a customer
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      // Decode the token to get the user's role
+      const decodedToken = jwtDecode(token);
+      const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      console.log("Role from token:", userRole);
+
+      // Only allow customers to add reservations
+      if (userRole !== "Customer") {
+        toast.error("Unauthorized: Only customers can add reservations.");
+        return;
+      }
+
+      // If the role is valid, proceed with reservation creation
+      const newReservation = {
+        ...formData,
+        reservationId: Math.floor(Math.random() * 10000),
+        paymentMethod: paymentMethod, // Include selected payment method
+      };
+
+      // Call onReservationAdded if it's provided
+      if (onReservationAdded && typeof onReservationAdded === "function") {
+        onReservationAdded(newReservation); // Pass the new reservation to the parent
+      }
+
+      toast.success("Reservation added successfully!");
+    } catch (error) {
+      console.error("Error decoding token or adding reservation:", error);
+      toast.error("Error adding reservation. Please try again.");
+    }
+  };
+
+    
   // Get the current date to restrict calendar selection
   const currentDate = new Date().toISOString().slice(0, 16);
 
@@ -159,18 +198,19 @@ const AddReservation = () => {
         <div className="form-group">
           <label>Select Car</label>
           <select
-            name="carId"
-            value={formData.carId}
-            onChange={(e) => handleCarSelect(e.target.value)}
-            required
-          >
-            <option value="">-- Choose a car --</option>
-            {cars.map((car) => (
-              <option key={car.carId} value={car.carId}>
-                {car.name} ({car.model}) - ${car.pricePerDay} per day
-              </option>
-            ))}
-          </select>
+  name="carId"
+  value={formData.carId}
+  onChange={(e) => handleCarSelect(e.target.value)} // Update selectedCar when dropdown changes
+  required
+>
+  <option value="">-- Choose a car --</option>
+  {cars.map((car) => (
+    <option key={car.carId} value={car.carId}>
+      {car.name} ({car.model}) - ${car.pricePerDay} per day
+    </option>
+  ))}
+</select>
+
         </div>
 
         <div className="form-group">
@@ -191,13 +231,64 @@ const AddReservation = () => {
         </div>
 
         <div className="form-group">
-          <label>Total Price</label>
-          <input
-            type="text"
-            value={`$${totalPrice.toFixed(2)}`}
-            readOnly
-          />
+  <label>Total Price Breakdown</label>
+  <div className="price-breakdown">
+    {selectedCar && formData.pickupDate && formData.dropoffDate ? (
+      <>
+        <p>
+          Car (
+          {cars.find((car) => car.carId === selectedCar)?.model || "None"}): $
+          {(() => {
+            const car = cars.find((car) => car.carId === selectedCar);
+            const days = moment(formData.dropoffDate).diff(moment(formData.pickupDate), "days");
+            return car && days > 0
+              ? (car.pricePerDay * days).toFixed(2)
+              : "0.00";
+          })()}
+        </p>
+        <p>
+          Extras: $
+          {selectedExtras.reduce((acc, extraId) => {
+            const extra = carExtras.find((extra) => extra.extraId === extraId);
+            return acc + (extra ? extra.price : 0);
+          }, 0).toFixed(2)}
+        </p>
+        <p>
+          <strong>Total: $
+            {(() => {
+              const car = cars.find((car) => car.carId === selectedCar);
+              const days = moment(formData.dropoffDate).diff(moment(formData.pickupDate), "days");
+              const carPrice = car && days > 0 ? car.pricePerDay * days : 0;
+              const extrasPrice = selectedExtras.reduce((acc, extraId) => {
+                const extra = carExtras.find((extra) => extra.extraId === extraId);
+                return acc + (extra ? extra.price : 0);
+              }, 0);
+              return (carPrice + extrasPrice).toFixed(2);
+            })()}
+          </strong>
+        </p>
+      </>
+    ) : (
+      <p>Please select a car and valid dates.</p>
+    )}
+  </div>
+</div>
+{/* Payment Method Selection */}
+<div>
+          <label>Payment Method:</label>
+          <select
+            name="paymentMethod"
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          >
+            <option value="">Select Payment Method</option>
+            <option value="paypal">PayPal</option>
+            <option value="upi">UPI</option>
+            <option value="credit_card">Credit Card</option>
+          </select>
         </div>
+
+
 
         <button type="submit" className="submit-btn">
           Submit Reservation

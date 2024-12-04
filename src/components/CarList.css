@@ -64,3 +64,22 @@
     grid-template-columns: 1fr; /* 1 column on smaller screens */
   }
 }
+
+/* CarList.css */
+
+/* Button Style for Delete */
+.delete-button {
+  background-color: #dc3545; /* Red */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #a71d2a; /* Darker red on hover */
+}
+

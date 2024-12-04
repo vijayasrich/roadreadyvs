@@ -1,16 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { getPayments } from "../services/PaymentService";
+import { getPaymentsByUserId, getAllPayments } from "../services/PaymentService";
 import "./PaymentList.css";
+import { jwtDecode } from 'jwt-decode';
 
-const PaymentHistory = () => {
+const PaymentList = () => {
   const [payments, setPayments] = useState([]);
   const [error, setError] = useState('');
-
+  const [role, setRole] = useState('');
+  
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const data = await getPayments();
-        console.log(data);  // Debugging: Check what data is returned from the API
+        // Get the user's role from the token
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        const decodedToken = jwtDecode(token);
+        const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        setRole(userRole);
+        
+        let data = [];
+        if (userRole === "Customer") {
+          // If the user is a customer, fetch their specific payments
+          data = await getPaymentsByUserId();
+        } else if (userRole === "Admin") {
+          // If the user is an admin, fetch all payments
+          data = await getAllPayments();
+        } else {
+          throw new Error("Unauthorized access. Invalid role.");
+        }
 
         if (data && data.length > 0) {
           setPayments(data);
@@ -18,10 +38,11 @@ const PaymentHistory = () => {
           setError('No payments found.');
         }
       } catch (error) {
-        console.error("Error fetching payments:", error);  // Debugging: Log the error
+        console.error("Error fetching payments:", error);
         setError('Failed to load payment history.');
       }
     };
+
     fetchPayments();
   }, []);
 
@@ -64,5 +85,4 @@ const PaymentHistory = () => {
   );
 };
 
-export default PaymentHistory;
-
+export default PaymentList;

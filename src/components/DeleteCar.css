@@ -1,0 +1,57 @@
+/* Style for DeleteCar Component */
+.delete-car {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 50px auto;
+  }
+  
+  .delete-car h2 {
+    font-size: 24px;
+    color: #dc3545;
+    margin-bottom: 20px;
+  }
+  
+  .delete-car p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .delete-car button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    width: 150px;
+  }
+  .delete-car button {
+    background-color: red !important;
+  }
+  
+  .delete-car button:nth-child(1) {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .delete-car button:nth-child(1):hover {
+    background-color: #a71d2a;
+  }
+  
+  .delete-car button:nth-child(2) {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .delete-car button:nth-child(2):hover {
+    background-color: #5a6268;
+  }
+  

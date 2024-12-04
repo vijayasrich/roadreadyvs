@@ -1,126 +1,125 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // For navigation and params
-import { getAllReservations, getReservationsByUserId } from "../services/ReservationService";
-//import ReservationService from "../services/ReservationService"; // Updated to use the new service
-import { addReview } from "../services/ReviewService"; // Importing the service
-import { toast } from "react-toastify"; // Optional for notifications
-import "./AddReview.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-const AddReviewPage = () => {
-  const { carId } = useParams(); // Using params to get the carId, if applicable
-  const [userReservations, setUserReservations] = useState([]);
-  const [newReview, setNewReview] = useState({
-    carId: "",
-    rating: "",
-    comment: "",
-  });
-  const [isCarReserved, setIsCarReserved] = useState(false);
-  const navigate = useNavigate();
-  const userId = 1; // Assuming you can get the logged-in user id. Update as needed.
+const AddReview = () => {
+    const [selectedCarId, setSelectedCarId] = useState('');
+    const [rating, setRating] = useState(1);
+    const [reviewText, setReviewText] = useState('');
+    const [cars, setCars] = useState([]);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        // Using the ReservationService to fetch reservations
-        const reservations = await getReservationsByUserId(userId);
-        setUserReservations(reservations);
+    // Fetch cars for the dropdown
+    useEffect(() => {
+        const fetchCars = async () => {
+            try {
+                const response = await axios.get('https://localhost:7020/api/Cars', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`, // or wherever your token is stored
+                    },
+                });
+                setCars(response.data);
+            } catch (error) {
+                console.error('Error fetching car list:', error);
+                toast.error('Failed to fetch cars. Please try again.');
+            }
+        };
 
-        // Check if the selected car has been reserved by the user
-        const hasReservation = reservations.some(
-          (reservation) => reservation.carId === carId
-        );
-        setIsCarReserved(hasReservation);
-      } catch (error) {
-        console.error("Error fetching reservations:", error);
-      }
+        fetchCars();
+    }, []);
+
+    // Handle review submission
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedCarId || !rating || !reviewText) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        try {
+            const reviewData = {
+                carId: selectedCarId,
+                rating,
+                reviewText,
+            };
+
+            const response = await axios.post(
+                'https://localhost:7020/api/Reviews',
+                reviewData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                }
+            );
+
+            toast.success('Review added successfully!');
+            navigate('/reviews'); // Navigate to the reviews page after success
+        } catch (error) {
+            console.error('Error adding review:', error);
+            if (error.response) {
+                toast.error(`Error: ${error.response.data.message || 'Unable to add review'}`);
+            } else {
+                toast.error('An error occurred. Please try again later.');
+            }
+        }
     };
 
-    fetchReservations();
-  }, [userId, carId]); // Dependency on userId and carId
+    return (
+        <div className="add-review-container">
+            <h2>Add Review</h2>
+            <form onSubmit={handleReviewSubmit}>
+                <div className="form-group">
+                    <label htmlFor="car">Select Car:</label>
+                    <select
+                        id="car"
+                        value={selectedCarId}
+                        onChange={(e) => setSelectedCarId(e.target.value)}
+                        required
+                    >
+                        <option value="">Select a car</option>
+                        {cars.map((car) => (
+                            <option key={car.carId} value={car.carId}>
+                                {car.make} {car.model} (Car ID: {car.carId})
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+                <div className="form-group">
+                    <label htmlFor="rating">Rating:</label>
+                    <select
+                        id="rating"
+                        value={rating}
+                        onChange={(e) => setRating(e.target.value)}
+                        required
+                    >
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <option key={star} value={star}>
+                                {star}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-    if (!isCarReserved) {
-      toast.error("You must have a reservation for this car to leave a review.");
-      return;
-    }
+                <div className="form-group">
+                    <label htmlFor="reviewText">Review:</label>
+                    <textarea
+                        id="reviewText"
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        required
+                        placeholder="Write your review here"
+                    />
+                </div>
 
-    try {
-      const addedReview = await addReview(newReview);
-      toast.success("Review added successfully!");
-      navigate("/reviews"); // Redirect to the reviews list after successful submission
-    } catch (error) {
-      console.error("Error adding review:", error);
-      toast.error("Error adding review.");
-    }
-  };
-
-  const handleCarSelect = (e) => {
-    const selectedCarId = e.target.value;
-    setNewReview((prevReview) => ({
-      ...prevReview,
-      carId: selectedCarId,
-    }));
-
-    // Check if the user has a reservation for this car
-    const hasReservation = userReservations.some(
-      (reservation) => reservation.carId === selectedCarId
+                <button type="submit" className="submit-button">
+                    Submit Review
+                </button>
+            </form>
+        </div>
     );
-    setIsCarReserved(hasReservation);
-  };
-
-  return (
-    <div className="add-review-page">
-      <h2>Add Review</h2>
-      <form onSubmit={handleSubmit}>
-        <select
-          name="carId"
-          value={newReview.carId}
-          onChange={handleCarSelect}
-          required
-        >
-          <option value="">-- Choose a Car --</option>
-          {userReservations.map((reservation) => (
-            <option key={reservation.carId} value={reservation.carId}>
-              Car ID: {reservation.carId} - {reservation.carModel} {/* Assuming the car model is available */}
-            </option>
-          ))}
-        </select>
-
-        <input
-          type="number"
-          name="rating"
-          placeholder="Rating (0-5)"
-          min="0"
-          max="5"
-          value={newReview.rating}
-          onChange={(e) =>
-            setNewReview({ ...newReview, rating: e.target.value })
-          }
-          required
-        />
-
-        <textarea
-          name="comment"
-          placeholder="Comment"
-          value={newReview.comment}
-          onChange={(e) =>
-            setNewReview({ ...newReview, comment: e.target.value })
-          }
-          required
-        />
-
-        <button type="submit" disabled={!isCarReserved}>
-          Submit Review
-        </button>
-      </form>
-
-      {!isCarReserved && (
-        <p>You must have a reservation for this car to leave a review.</p>
-      )}
-    </div>
-  );
 };
 
-export default AddReviewPage;
+export default AddReview;

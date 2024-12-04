@@ -34,4 +34,72 @@ const getCarById = async (carId) => {
   }
 };
 
-export { getCars, getCarById };
+
+const addCar = async (carData) => {
+  try {
+    // Get token from localStorage (or wherever it's stored)
+    const token = localStorage.getItem("token");
+
+    const response = await axios.post(
+      "https://localhost:7020/api/Cars", 
+      carData, 
+      {
+        headers: {
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${token}`, // Include token in headers
+        },
+      }
+    );
+    console.log("Car added successfully", response.data);
+    return response;
+  } catch (error) {
+    console.error("Error adding car:", error);
+    throw error; // Ensure errors are thrown to be caught in the component
+  }
+};
+
+const updateCar = async (id, carData) => {
+  try {
+    const token = localStorage.getItem("token"); // Retrieve token from storage
+
+    const response = await axios.put(
+      `${API_URL}/${id}`, // Endpoint with the car ID
+      carData, // Updated car data
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include token in headers
+        },
+      }
+    );
+
+    console.log(`Car with ID ${id} updated successfully`, response.data);
+    return response.data; // Return success message or updated data
+  } catch (error) {
+    console.error(`Error updating car with ID ${id}:`, error);
+    throw error; // Ensure errors are propagated
+  }
+};
+const deleteCar = async (id) => {
+  try {
+    const token = localStorage.getItem("token"); // Retrieve token from storage
+
+    const response = await axios.delete(
+      `${API_URL}/${id}`, // Endpoint with the car ID
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token in headers
+        },
+      }
+    );
+
+    console.log(`Car with ID ${id} deleted successfully`, response.data);
+    return response.data; // Return success message
+  } catch (error) {
+    console.error(`Error deleting car with ID ${id}:`, error);
+    throw error; // Ensure errors are propagated
+  }
+};
+
+
+export { getCars, getCarById, addCar,updateCar,deleteCar };

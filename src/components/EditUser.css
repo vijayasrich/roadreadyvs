@@ -1,0 +1,90 @@
+/* Container for the edit user card */
+.edit-user-card {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title of the form */
+  .edit-user-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  /* Form elements (labels and inputs) */
+  .edit-user-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Input fields and label styling */
+  .edit-user-card label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .edit-user-card input {
+    padding: 13px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .edit-user-card input:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  /* Button styling */
+  .edit-user-card button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .edit-user-card button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Error message styling */
+  .edit-user-card .error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  /* Responsive design for mobile */
+  @media (max-width: 600px) {
+    .edit-user-card {
+      padding: 15px;
+      margin: 10px;
+    }
+  
+    .edit-user-card h2 {
+      font-size: 20px;
+    }
+  
+    .edit-user-card label,
+    .edit-user-card input {
+      font-size: 14px;
+    }
+  
+    .edit-user-card button {
+      font-size: 14px;
+    }
+  }
+  

@@ -1,0 +1,54 @@
+.edit-car {
+    max-width: 1000px; /* Increase the maximum width */
+    margin: 0 auto;
+    padding: 30px; /* Increase padding for more spacing */
+    border: 1px solid #ddd;
+    border-radius: 10px; /* Slightly larger border-radius for aesthetics */
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow for better visual hierarchy */
+  }
+  
+  .edit-car h2 {
+    text-align: center;
+    margin-bottom: 30px; /* Increased spacing below the heading */
+    font-size: 1.8em; /* Larger font size for the heading */
+  }
+  
+  .edit-car form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Increase the spacing between form elements */
+  }
+  
+  .edit-car form div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .edit-car form label {
+    font-weight: bold;
+    margin-bottom: 10px; /* More space below the label */
+  }
+  
+  .edit-car form input,
+  .edit-car form select {
+    padding: 12px; /* Larger padding for input fields */
+    font-size: 1em; /* Increase font size for better readability */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .edit-car button {
+    padding: 12px 20px; /* Larger button for better usability */
+    font-size: 1em; /* Larger text on the button */
+    background-color: #0bb4b1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-car button:hover {
+    background-color: #19d8e6;
+  }
+  

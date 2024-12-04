@@ -1,5 +1,5 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // You need to install this package: `npm install jwt-decode`
+import { jwtDecode } from "jwt-decode"; 
 
 const API_URL = "https://localhost:7020/api/User";
 
@@ -60,5 +60,21 @@ const getUserById = async () => {
     throw error;
   }
 };
+// Update a user by ID
+const updateUser = async (userId, userDto) => {
+  try {
+    const token = getAuthToken();
+    const response = await axios.put(`${API_URL}/${userId}`, userDto, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating user with ID ${userId}:`, error);
+    throw error;
+  }
+};
 
-export { getUsers, getUserById };
+export { getUsers, getUserById, updateUser };
