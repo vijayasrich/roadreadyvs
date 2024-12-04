@@ -48,7 +48,7 @@ const Header = () => {
               {userRole === "Customer" && (
                 
                 <li>
-                  <Link to="/add-reservation">Booking</Link>
+                  <Link to="/add-reservation">Book</Link>
                 </li>
                 
                 

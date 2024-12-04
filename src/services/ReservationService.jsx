@@ -138,5 +138,41 @@ const calculateTotalPrice = (pickupDate, dropoffDate, carCostPerDay, extraIds) =
   const totalPrice = carCostPerDay * diffInDays + extraCost;
   return totalPrice;
 };
+const approveReservation = async (reservationId) => {
+  try {
+    // Prepare the request payload
+    const reservationData = {
+      reservationId: reservationId, // Adjust based on the backend's expectations
+      status: "confirmed",
+    };
 
-export { getReservationsByUserId, getAllReservations, addReservation, deleteReservation, calculateTotalPrice };
+    // Make the PUT request
+    const response = await axios.put(
+      `https://localhost:7020/api/Reservations/${reservationId}/status`,
+      reservationData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Include JWT for secure APIs
+          'Content-Type': 'application/json', // Ensure JSON content type
+        },
+      }
+    );
+
+    console.log("Reservation approved:", response.data);
+    return response.data;
+  } catch (error) {
+    // Handle error responses or generic issues
+    if (error.response) {
+      console.error("Error details:", error.response.data);
+      throw new Error(error.response.data.message || "Failed to approve reservation.");
+    } else {
+      console.error("Error approving reservation:", error.message);
+      throw new Error("Failed to approve reservation.");
+    }
+  }
+};
+
+
+    
+
+export { getReservationsByUserId, getAllReservations, addReservation, deleteReservation, calculateTotalPrice,approveReservation };
