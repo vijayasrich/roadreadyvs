@@ -287,6 +287,7 @@ const AddReservation = ({ onReservationAdded }) => {
           >
             <option value="">-- Select Payment Method --</option>
             <option value="Credit Card">Credit Card</option>
+            <option value="UPI">UPI</option>
             <option value="PayPal">PayPal</option>
           </select>
         </div>

@@ -24,7 +24,7 @@ import AddReviewPage from "./components/AddReview";
 import EditUser from "./components/EditUser";
 import UserList from "./components/UserList";
 import EditCarExtra from "./components/EditCarExtra";
-
+import ReservationManagement from "./components/ReservationManagement";
 
 
 function App() {
@@ -54,6 +54,7 @@ function App() {
               <Route path="/users" element={<UserList />} />
               <Route path="/edit-user/:userId" element={<EditUser />} /> 
               <Route path="/users" element={<UserList />} />
+              <Route path="/reservation-management" element={<ReservationManagement />} /> {/* Added here */}
 
              
               {/*<Route path="/cars" element={<CarList />} />
