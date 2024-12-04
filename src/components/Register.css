@@ -1,86 +1,153 @@
-/* Container for the form */
+/* Ensure the container covers the full height of the page */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-y: scroll; /* Ensures the scrollbar works properly */
+}
+
+/* Background image styling */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Use minimum height for scrolling support */
+  background-image: url("../images/background.jpg"); /* Replace with your image */
+  background-size: cover; /* Ensures the image covers the entire page */
+  background-position: center;
+  background-attachment: fixed; /* Keeps the background fixed while scrolling */
+  background-repeat: no-repeat;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Form-specific styling remains unchanged */
+form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+/* Input group styles */
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  position: relative; /* Added for icon positioning */
+}
+
+.form-group i {
+  position: absolute;
+  left: 10px;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 12px 12px 40px; /* Space for the icon */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+/* Input focus styles */
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button styles */
+button {
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* Loader while registering */
+button:disabled {
+  pointer-events: none;
+}
+
+button:disabled::after {
+  content: '...';
+  animation: blink 1.2s infinite step-start;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
   }
-  
-  /* Form styles */
+}
+
+/* Login link styles */
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.login-link p {
+  font-size: 0.9rem;
+}
+
+.login-link a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
   form {
-    background-color: #fff;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px; /* Fixed width for the form */
-    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Input group styles */
-  .form-group {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-  }
-  
+
   .form-group input,
   .form-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-    margin-left: 10px;
+    padding: 10px 10px 10px 35px;
+    font-size: 0.9rem;
   }
-  
-  /* Input focus styles */
-  .form-group input:focus,
-  .form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  /* Button styles */
+
   button {
-    width: 100%;
-    padding: 15px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 10px;
+    font-size: 1rem;
   }
-  
-  button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+
+  .form-group i {
+    font-size: 1rem;
   }
-  
-  button:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
-  
-  /* Loader while registering */
-  button:disabled {
-    pointer-events: none;
-  }
-  
-  button:disabled::after {
-    content: '...';
-    animation: blink 1.2s infinite step-start;
-  }
-  
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-  
+}

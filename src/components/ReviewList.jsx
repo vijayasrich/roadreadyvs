@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { getReviews, addReview } from "../services/ReviewService"; // Importing the service
+import React, { useEffect, useState, useContext } from "react";
+import { getReviews } from "../services/ReviewService"; // Importing the service
+import { useNavigate } from "react-router-dom"; // For navigation
+import AuthContext from "../utils/AuthContext"; // Importing the AuthContext to access user role
 import "./ReviewList.css"; // Importing the CSS file
 
 const ReviewList = () => {
   const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState({
-    carId: "",
-    rating: "",
-    comment: "",
-  });
+  const { userRole } = useContext(AuthContext); // Accessing the userRole from AuthContext
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch reviews on component mount
@@ -23,19 +22,9 @@ const ReviewList = () => {
     fetchReviews();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const addedReview = await addReview(newReview);
-      setReviews((prevReviews) => [...prevReviews, addedReview]);
-      setNewReview({
-        carId: "",
-        rating: "",
-        comment: "",
-      });
-    } catch (error) {
-      console.error("Error adding review:", error);
-    }
+  const handleAddReviewClick = () => {
+    // Redirect to the "Add Review" page
+    navigate("/add-review");
   };
 
   return (
@@ -44,7 +33,6 @@ const ReviewList = () => {
       <ul>
         {reviews.map((review) => (
           <li key={review.carId}>
-            {/* Only show carId, rating, and reviewText */}
             <h3>Car ID: {review.carId}</h3>
             <p>Rating: {review.rating}</p>
             <p>{review.reviewText}</p>
@@ -52,38 +40,10 @@ const ReviewList = () => {
         ))}
       </ul>
 
-      <h3>Add a Review</h3>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Car ID"
-          value={newReview.carId}
-          onChange={(e) =>
-            setNewReview({ ...newReview, carId: e.target.value })
-          }
-          required
-        />
-        <input
-          type="number"
-          placeholder="Rating (0-5)"
-          min="0"
-          max="5"
-          value={newReview.rating}
-          onChange={(e) =>
-            setNewReview({ ...newReview, rating: e.target.value })
-          }
-          required
-        />
-        <textarea
-          placeholder="Comment"
-          value={newReview.comment}
-          onChange={(e) =>
-            setNewReview({ ...newReview, comment: e.target.value })
-          }
-          required
-        />
-        <button type="submit">Submit Review</button>
-      </form>
+      {/* Conditionally render the Add Review button based on user role */}
+      {userRole === "Customer" && (
+        <button onClick={handleAddReviewClick}>Add Review</button>
+      )}
     </div>
   );
 };

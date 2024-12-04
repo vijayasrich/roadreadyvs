@@ -1,45 +1,83 @@
 import React, { useState, useEffect } from "react";
-import { getUsers } from "../services/UserService"; // Ensure this is correctly imported
+import { getUsers, getUserById } from "../services/UserService";
+import {jwtDecode} from "jwt-decode"; // Ensure this is correctly imported
+import { useNavigate } from "react-router-dom"; // Import React Router's useNavigate
 import "./UserList.css"; // Import your CSS file
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [role, setRole] = useState("");
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getUsers(); // Fetch users from the API
-        setUsers(data); // Update state with the users data
+        // Get the user's role from the token
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        const decodedToken = jwtDecode(token);
+        const userRole =
+          decodedToken[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ];
+        setRole(userRole);
+
+        let data = [];
+        if (userRole === "Customer") {
+          data = await getUserById();
+          setUsers([data]); // Wrapping in an array for consistent rendering
+        } else if (userRole === "Admin") {
+          data = await getUsers();
+          setUsers(data);
+        } else {
+          throw new Error("Unauthorized access. Invalid role.");
+        }
+
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+          setError("No users found.");
+        }
       } catch (error) {
-        setError("Failed to load users");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching users:", error);
+        setError("Failed to load user details.");
       }
     };
-    fetchUsers();
+
+    fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  const handleEditClick = (userId) => {
+    navigate(`/edit-user/${userId}`); // Navigate to the edit user page with the user's ID
+  };
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="user-list">
-      {users.length === 0 ? (
-        <p>No users found</p>
-      ) : (
-        <div className="card-container">
-          {users.map((user) => (
-            <div className="card" key={user.userId}>
-              <h2>{user.firstName} {user.lastName}</h2>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Username:</strong> {user.userName}</p>
-              <p><strong>Phone:</strong> {user.phoneNumber}</p>
-            </div>
-          ))}
+      {users.map((user) => (
+        <div className="user-card" key={user.id}>
+          <h2>
+            {user.firstName} {user.lastName}
+          </h2>
+          <p>
+            <strong>Email:</strong> {user.email}
+          </p>
+          <p>
+            <strong>Username:</strong> {user.userName}
+          </p>
+          <p>
+            <strong>Phone:</strong> {user.phoneNumber}
+          </p>
+          {role === "Customer" && (
+            <button onClick={() => handleEditClick(user.id)}>Edit</button>
+          )}
         </div>
-      )}
+      ))}
     </div>
   );
 };

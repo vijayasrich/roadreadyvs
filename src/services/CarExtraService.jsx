@@ -1,13 +1,15 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_URL = "https://localhost:7020/api/CarExtra";
 
+// Get all car extras
 const getAllCarExtras = async () => {
   try {
-    const token = localStorage.getItem("token"); // Retrieve token from storage
+    const token = localStorage.getItem("token");
     const response = await axios.get(API_URL, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include token in headers
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
@@ -17,7 +19,7 @@ const getAllCarExtras = async () => {
   }
 };
 
-// Get a single CarExtra by ID
+// Get a single car extra by ID
 const getCarExtraById = async (extraId) => {
   try {
     const token = localStorage.getItem("token");
@@ -33,58 +35,78 @@ const getCarExtraById = async (extraId) => {
   }
 };
 
-// Add a new CarExtra
-const addCarExtra = async (carExtra) => {
+// Add a car extra
+const addCarExtra = async (carExtraData) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.post(API_URL, carExtra, {
+
+    if (!token) {
+      toast.error("You must be logged in to add a car extra.");
+      return;
+    }
+
+    const response = await axios.post(API_URL, carExtraData, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     });
-    return response.data; // Return the created car extra data
+
+    toast.success("Car extra added successfully!");
+    return response.data;
   } catch (error) {
+    toast.error("Failed to add car extra. Please try again.");
     console.error("Error adding car extra:", error);
-    throw error;
   }
 };
 
-// Update an existing CarExtra
-const updateCarExtra = async (extraId, carExtra) => {
+// Update car extra
+const updateCarExtra = async (extraId, carExtraData) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.put(`${API_URL}/${extraId}`, carExtra, {
+
+    if (!token) {
+      toast.error("You must be logged in to update a car extra.");
+      return;
+    }
+
+    const response = await axios.put(`${API_URL}/${extraId}`, carExtraData, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     });
-    return response.data; // Return the updated car extra data
+
+    toast.success(`Car extra with ID ${extraId} updated successfully!`);
+    return response.data;
   } catch (error) {
-    console.error(`Error updating car extra with ID ${extraId}:`, error);
-    throw error;
+    toast.error("Failed to update car extra. Please try again.");
+    console.error("Error updating car extra:", error);
   }
 };
 
-// Delete a CarExtra by ID
+// Delete car extra
 const deleteCarExtra = async (extraId) => {
   try {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("You must be logged in to delete a car extra.");
+      return;
+    }
+
     const response = await axios.delete(`${API_URL}/${extraId}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
     });
-    return response.data; // Return confirmation of deletion
+
+    toast.success(`Car extra with ID ${extraId} deleted successfully!`);
+    return response.data;
   } catch (error) {
-    console.error(`Error deleting car extra with ID ${extraId}:`, error);
-    throw error;
+    toast.error("Failed to delete car extra. Please try again.");
+    console.error("Error deleting car extra:", error);
   }
 };
 
-export {
-  getAllCarExtras,
-  getCarExtraById,
-  addCarExtra,
-  updateCarExtra,
-  deleteCarExtra,
-};
+export { getAllCarExtras, getCarExtraById, addCarExtra, updateCarExtra, deleteCarExtra };

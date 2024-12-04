@@ -38,4 +38,19 @@
   .car-extra-card button:hover {
     background-color: #45a049;
   }
+  /* Style for Delete Car Extra button */
+.delete-car-extra-btn {
+  background-color: #f44336; /* Red background for delete button */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.delete-car-extra-btn:hover {
+  background-color: #d32f2f; /* Darker red when hovered */
+}
   

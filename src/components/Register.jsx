@@ -9,47 +9,53 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(""); // Role state
-  const [loading, setLoading] = useState(false); // To show loading state
-  const navigate = useNavigate(); // To navigate to another page
+  const [role, setRole] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); // State for success message
+  const navigate = useNavigate();
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Basic validation
-    if (!username || !email || !password || !role) {
+
+    if (!username || !email || !password || !role || !phoneNumber || !firstName || !lastName) {
       toast.error("All fields are required.");
       return;
     }
-    
-    setLoading(true); // Set loading to true while making the API call
+
+    setLoading(true);
+    setSuccessMessage(""); // Clear any previous success message
     try {
-      // Make API request to register the user
-      const response = await axios.post("https://localhost:7020/api/Authentication/register", { 
-        username, 
-        email, 
-        password, 
-        role 
+      const response = await axios.post("https://localhost:7020/api/Authentication/register", {
+        userName: username,
+        email,
+        password,
+        role,
+        phoneNumber,
+        firstName,
+        lastName,
       });
 
-      if (response.data.success) {
+      if (response.data.status === "Success") {
+        setSuccessMessage("Registration successful! Redirecting to login...");
         toast.success("Registration successful!");
-        // Redirect to login page after successful registration
         setTimeout(() => {
           navigate("/login");
-        }, 2000); // Delay navigation to allow the success toast to appear
+        }, 3000); // Wait 3 seconds before redirecting
       }
     } catch (error) {
       toast.error(`Registration failed: ${error.response?.data?.message || "Please try again!"}`);
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
+        {successMessage && <p className="success-message">{successMessage}</p>} {/* Success message */}
         <div className="form-group">
           <i className="fas fa-user"></i>
           <input
@@ -69,7 +75,7 @@ const Register = () => {
             placeholder="Email"
           />
         </div>
-        
+
         <div className="form-group">
           <i className="fas fa-lock"></i>
           <input
@@ -93,9 +99,43 @@ const Register = () => {
           </select>
         </div>
 
+        <div className="form-group">
+          <i className="fas fa-phone"></i>
+          <input
+            type="text"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder="Phone Number"
+          />
+        </div>
+
+        <div className="form-group">
+          <i className="fas fa-user-circle"></i>
+          <input
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="First Name"
+          />
+        </div>
+
+        <div className="form-group">
+          <i className="fas fa-user-circle"></i>
+          <input
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Last Name"
+          />
+        </div>
+
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
+
+        <div className="login-link">
+          <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
       </form>
     </div>
   );
