@@ -45,3 +45,14 @@
   text-align: center;
   color: red;
 }
+/* Center the heading */
+.reservation-list h3 {
+  text-align: center; /* Centers the text horizontally */
+  margin-top: 20px; /* Adds space above the heading */
+  margin-bottom: 20px; /* Optional, adds space below the heading */
+  font-size: 24px; /* Optional, adjust the font size as needed */
+  font-weight: bold; /* Optional, makes the text bold */
+  color: #333; /* Optional, change the text color */
+}
+
+

@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { getAllReservations, getReservationsByUserId } from "../services/ReservationService";
-import { deleteReservation} from "../services/ReservationService";
+import {
+  getAllReservations,
+  getReservationsByUserId,
+  deleteReservation,
+} from "../services/ReservationService";
 import { getCarById } from "../services/CarService";
-import {jwtDecode} from "jwt-decode";
+import {jwtDecode }from "jwt-decode";
 import "./ReservationList.css";
 
 const formatDate = (dateString) => {
@@ -17,36 +20,59 @@ const ReservationList = ({ addedReservation }) => {
   const [role, setRole] = useState("");
   const [userId, setUserId] = useState(null);
 
-  // Fetch reservations on initial load
   useEffect(() => {
     const fetchReservations = async () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("No token found");
-        }
-
+        if (!token) throw new Error("No token found");
+  
         const decodedToken = jwtDecode(token);
-        const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        const userRole = decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ];
         setRole(userRole);
-
-        let data = [];
+  
+        const userId = decodedToken.userId;
+        setUserId(userId);
+  
+        let data;
         if (userRole === "Customer") {
-          data = await getReservationsByUserId();
+          data = await getReservationsByUserId(userId);
         } else if (userRole === "Admin" || userRole === "Agent") {
           data = await getAllReservations();
         } else {
           throw new Error("Unauthorized access. Invalid role.");
         }
-
+  
+        // Log the response for debugging
+        console.log("API Response:", data);
+  
+        let combinedReservations = [];
+        if (userRole === "Customer") {
+          // Combine completed and ongoing reservations for customers
+          const { completedReservations = [], ongoingReservations = [] } = data;
+          combinedReservations = [...completedReservations, ...ongoingReservations];
+        } else {
+          // For Admin or Agent, use data as it is (if it's an array)
+          if (!Array.isArray(data)) {
+            throw new Error("Admin/Agent data is not an array.");
+          }
+          combinedReservations = data;
+        }
+  
+        // Enrich reservations with car details
         const updatedReservations = await Promise.all(
-          data.map(async (reservation) => {
+          combinedReservations.map(async (reservation) => {
             const carDetails = await getCarById(reservation.carId);
-            return { ...reservation, carMake: carDetails.make, carModel: carDetails.model };
+            return {
+              ...reservation,
+              carMake: carDetails.make || "N/A",
+              carModel: carDetails.model || "N/A",
+            };
           })
         );
-
+  
         setReservations(updatedReservations);
       } catch (err) {
         console.error("Error fetching reservations:", err);
@@ -55,14 +81,17 @@ const ReservationList = ({ addedReservation }) => {
         setLoading(false);
       }
     };
-
+  
     fetchReservations();
   }, [addedReservation]);
+  
 
   const handleDelete = async (reservationId) => {
     try {
       await deleteReservation(reservationId);
-      setReservations((prev) => prev.filter((res) => res.reservationId !== reservationId));
+      setReservations((prev) =>
+        prev.filter((res) => res.reservationId !== reservationId)
+      );
     } catch (err) {
       console.error("Error deleting reservation:", err);
     }
@@ -74,17 +103,17 @@ const ReservationList = ({ addedReservation }) => {
     return pickup > today; // Enable delete if pickup date is in the future
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="reservation-list">
-      <h2>{role === "Admin" || role === "Agent" ? "All Reservations" : "Your Reservations"}</h2>
+      <h2>
+        {role === "Admin" || role === "Agent"
+          ? "All Reservations"
+          : "Your Reservations"}
+      </h2>
       <table>
         <thead>
           <tr>
@@ -92,6 +121,8 @@ const ReservationList = ({ addedReservation }) => {
             <th>Pickup Date</th>
             <th>Dropoff Date</th>
             <th>Status</th>
+            {/*{role === "Admin" || role === "Agent" && <th>User ID</th>}
+            {role === "Admin" || role === "Agent" && <th>Actions</th>}*/}
             {role === "Admin" || role === "Agent" ? <th>User ID</th> : null}
             {(role === "Admin" || role === "Agent") && <th>Actions</th>}
             {/*<th>Actions</th>*/}
@@ -105,7 +136,10 @@ const ReservationList = ({ addedReservation }) => {
                 <td>{formatDate(reservation.pickupDate)}</td>
                 <td>{formatDate(reservation.dropoffDate)}</td>
                 <td>{reservation.status}</td>
-  
+                {role === "Admin" || role === "Agent" && (
+                  <td>{reservation.userId}</td>
+                )}
+                {/*{role === "Admin" || role === "Agent" && (*/}
                 {/* Display userId column only for Admin or Agent */}
                 {role === "Admin" || role === "Agent" ? <td>{reservation.userId}</td> : null}
   
@@ -124,14 +158,19 @@ const ReservationList = ({ addedReservation }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={role === "Admin" || role === "Agent" ? "6" : "5"}>No reservations found.</td>
+              <td
+                colSpan={
+                  role === "Admin" || role === "Agent" ? "6" : "5"
+                }
+              >
+                No reservations found.
+              </td>
             </tr>
           )}
         </tbody>
       </table>
     </div>
   );
-  
 };
 
 export default ReservationList;
