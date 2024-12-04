@@ -8,20 +8,21 @@ const AddReview = () => {
     const [rating, setRating] = useState(1);
     const [reviewText, setReviewText] = useState('');
     const [cars, setCars] = useState([]);
+    const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
 
-    // Fetch cars for the dropdown
+    // Fetch the cars for the dropdown
     useEffect(() => {
         const fetchCars = async () => {
             try {
                 const response = await axios.get('https://localhost:7020/api/Cars', {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`, // or wherever your token is stored
+                        Authorization: `Bearer ${localStorage.getItem('token')}`, // Token from localStorage
                     },
                 });
                 setCars(response.data);
             } catch (error) {
-                console.error('Error fetching car list:', error);
+                console.error('Error fetching cars:', error);
                 toast.error('Failed to fetch cars. Please try again.');
             }
         };
@@ -29,33 +30,49 @@ const AddReview = () => {
         fetchCars();
     }, []);
 
+    // Fetch the user ID from the token
+    useEffect(() => {
+        const fetchUserId = () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode JWT token
+                setUserId(decodedToken.userId); // Assuming 'userId' is stored in the token
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
     // Handle review submission
     const handleReviewSubmit = async (e) => {
         e.preventDefault();
+
         if (!selectedCarId || !rating || !reviewText) {
             toast.error('Please fill in all fields');
             return;
         }
 
+        if (!userId) {
+            toast.error('User not logged in');
+            return;
+        }
+
         try {
             const reviewData = {
+                userId,
                 carId: selectedCarId,
                 rating,
                 reviewText,
             };
 
-            const response = await axios.post(
-                'https://localhost:7020/api/Reviews',
-                reviewData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                }
-            );
+            const response = await axios.post('https://localhost:7020/api/Reviews', reviewData, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
 
             toast.success('Review added successfully!');
-            navigate('/reviews'); // Navigate to the reviews page after success
+            navigate('/reviews'); // Redirect to reviews page after success
         } catch (error) {
             console.error('Error adding review:', error);
             if (error.response) {
