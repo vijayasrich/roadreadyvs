@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // For navigation
-import { getUserById, updateUser } from "../services/UserService"; // Ensure correct imports
-import { jwtDecode } from "jwt-decode"; // For decoding the token
+import { useNavigate } from "react-router-dom"; 
+import { getUserById, updateUser } from "../services/UserService"; 
+import { jwtDecode } from "jwt-decode"; 
 import "./EditUser.css";
 
 const EditUser = () => {
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const navigate = useNavigate(); 
   const [user, setUser] = useState({});
   const [error, setError] = useState("");
   

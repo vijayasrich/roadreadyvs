@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { getUsers, getUserById } from "../services/UserService";
-import {jwtDecode} from "jwt-decode"; // Ensure this is correctly imported
-import { useNavigate } from "react-router-dom"; // Import React Router's useNavigate
-import "./UserList.css"; // Import your CSS file
+import {jwtDecode} from "jwt-decode";
+import { useNavigate } from "react-router-dom"; 
+import "./UserList.css"; 
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [role, setRole] = useState("");
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,7 +62,7 @@ const UserList = () => {
       {users.map((user) => (
         <div className="user-card" key={user.id}>
           <h2>
-            {user.firstName} {user.lastName}
+            {user.id} {user.firstName} {user.lastName}
           </h2>
           <p>
             <strong>Email:</strong> {user.email}

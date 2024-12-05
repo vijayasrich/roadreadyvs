@@ -3,7 +3,6 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import Register from "./components/Register";
 import PrivateRoute from "./utils/PrivateRoute";
 import { AuthProvider } from "./utils/AuthContext";
@@ -54,23 +53,10 @@ function App() {
               <Route path="/users" element={<UserList />} />
               <Route path="/edit-user/:userId" element={<EditUser />} /> 
               <Route path="/users" element={<UserList />} />
-              <Route path="/reservation-management" element={<ReservationManagement />} /> {/* Added here */}
-
-             
-              {/*<Route path="/cars" element={<CarList />} />
-              <Route path="/carextras" element={<CarExtraList />} />
-              <Route path="/users" element={<UserList />} />
-              <Route path="/reviews" element={<ReviewList />} />
-              <Route path="/reservations" element={<ReservationList />} />
-              <Route path="/payments" element={<PaymentList />} />
-              <Route path="/reset-password" element={<PasswordResetEmail />} />
-                <Route path="/reset-passwordtoken" element={<PasswordResetForm />} />
-
-                <Route path="/products" element={<ProductList />} />*/}
+              <Route path="/reservation-management" element={<ReservationManagement />} />
               </Route>
             </Routes>
           </main>
-          <Footer />
         </div>
         <ToastContainer />
       </AuthProvider>

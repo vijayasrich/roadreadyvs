@@ -25,7 +25,7 @@ body {
 
 .logo {
   position: absolute; /* Use absolute positioning to control placement */
-  top: 20px; /* Adjust the top spacing to place the logo near the top */
+  top: 100px; /* Adjust the top spacing to place the logo near the top */
   left: 50%; /* Center the logo horizontally */
   transform: translateX(-50%); /* Adjust to truly center the logo */
   width: 150px; /* Set the width of the logo */

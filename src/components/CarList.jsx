@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { getCars } from "../services/CarService";
-import { deleteCar } from "../services/CarService"; // Import delete service
+import { deleteCar } from "../services/CarService";
 import "./CarList.css";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../utils/AuthContext";

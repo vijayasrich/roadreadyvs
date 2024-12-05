@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
-import { getAllCarExtras, deleteCarExtra } from "../services/CarExtraService"; // Import the necessary service
+import { getAllCarExtras, deleteCarExtra } from "../services/CarExtraService";
 import "./CarExtraList.css"; 
-import ClipLoader from "react-spinners/ClipLoader"; // To show a loading spinner
-import { useNavigate } from "react-router-dom"; // For navigation
+import ClipLoader from "react-spinners/ClipLoader";
+import { useNavigate } from "react-router-dom"; 
 import AuthContext from "../utils/AuthContext"; 
 
 const CarExtraList = () => {

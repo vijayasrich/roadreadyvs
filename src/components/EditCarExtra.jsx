@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getCarExtraById, updateCarExtra } from "../services/CarExtraService"; // Import services for fetching and updating car extra
-import "./EditCarExtra.css"; // Import the CSS file for styling
+import { getCarExtraById, updateCarExtra } from "../services/CarExtraService"; 
+import "./EditCarExtra.css"; 
 
 const EditCarExtra = () => {
   const [carExtra, setCarExtra] = useState({
