@@ -1,8 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // For redirection
-import { toast } from "react-toastify"; // For success/failure notifications
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
+import { useNavigate } from "react-router-dom"; 
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
 import "./Register.css";
 
 const Register = () => {
@@ -14,7 +14,7 @@ const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(""); // State for success message
+  const [successMessage, setSuccessMessage] = useState(""); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

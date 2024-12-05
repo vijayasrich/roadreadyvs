@@ -1,7 +1,7 @@
 import React, { useState } from "react"; 
-import { addCarExtra } from "../services/CarExtraService"; // Import the addCarExtra function from the service
-import { toast } from "react-toastify"; // For notifications
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
+import { addCarExtra } from "../services/CarExtraService"; 
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
 import "./AddCarExtra.css"; 
 
 const AddCarExtra = () => {
@@ -9,13 +9,13 @@ const AddCarExtra = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false); 
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
+    // validation
     if (!name || !description || !price) {
       toast.error("All fields are required!");
       return;

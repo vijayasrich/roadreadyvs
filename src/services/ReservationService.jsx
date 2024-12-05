@@ -171,8 +171,29 @@ const approveReservation = async (reservationId) => {
     }
   }
 };
-
-
+const cancelReservation = async (reservationId) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.delete(`${API_URL}/cancel/${reservationId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Error canceling reservation:", error.response?.data || error.message);
     
+    // Throw specific error message
+    if (error.response?.status === 400) {
+      throw new Error(error.response?.data?.message || "Failed to cancel reservation.");
+    } else if (error.response?.status === 401) {
+      throw new Error("Unauthorized: You do not have permission to cancel this reservation.");
+    } else {
+      throw new Error("An unexpected error occurred while canceling reservation.");
+    }
+  }
+};
 
-export { getReservationsByUserId, getAllReservations, addReservation, deleteReservation, calculateTotalPrice,approveReservation };
+
+export { getReservationsByUserId, getAllReservations, addReservation, deleteReservation, calculateTotalPrice,approveReservation,cancelReservation };

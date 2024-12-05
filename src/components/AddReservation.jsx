@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getCars } from "../services/CarService"; // Import Car service
-import { getAllCarExtras } from "../services/CarExtraService"; // Import CarExtra service
+import { getCars } from "../services/CarService"; 
+import { getAllCarExtras } from "../services/CarExtraService"; 
 import ClipLoader from "react-spinners/ClipLoader"; // To show a loading spinner
 import moment from "moment"; // To calculate date differences easily
 import { jwtDecode } from "jwt-decode";
-import { addReservation } from "../services/ReservationService"; // Add Reservation service
-import "./AddReservation.css"; // Add your styling here
+import { addReservation } from "../services/ReservationService"; 
+import "./AddReservation.css"; 
 
 const AddReservation = ({ onReservationAdded }) => {
-  const [cars, setCars] = useState([]); // State to store car data
-  const [carExtras, setCarExtras] = useState([]); // State to store car extras
-  const [selectedCar, setSelectedCar] = useState(null); // State to store selected car
-  const [selectedExtras, setSelectedExtras] = useState([]); // State for selected car extras
-  const [loading, setLoading] = useState(false); // State for loading status
-  const [totalPrice, setTotalPrice] = useState(0); // State to store the total price
-  const [paymentMethod, setPaymentMethod] = useState(""); // State for payment method
+  const [cars, setCars] = useState([]); 
+  const [carExtras, setCarExtras] = useState([]); 
+  const [selectedCar, setSelectedCar] = useState(null); 
+  const [selectedExtras, setSelectedExtras] = useState([]); 
+  const [loading, setLoading] = useState(false); 
+  const [totalPrice, setTotalPrice] = useState(0); 
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [formData, setFormData] = useState({
-    // Initialize other fields in formData, leaving userId to be set later
+   
     carId: selectedCar?.carId,
     pickupDate: new Date().toISOString().slice(0, 16),
     dropoffDate: new Date().toISOString().slice(0, 16),
@@ -165,14 +165,14 @@ const AddReservation = ({ onReservationAdded }) => {
         return;
       }
 
-      // Create the reservation object with CarExtraIds and payment method
+      // Create the reservation object with CarExtraIds 
       const newReservation = {
         ...formData,
         CarExtraIds: selectedExtras, // Attach the selected extras (CarExtraIds)
-        //paymentMethod: paymentMethod, // Include selected payment method
+        
       };
 
-      // Call onReservationAdded if it's provided
+      
       if (onReservationAdded && typeof onReservationAdded === "function") {
         onReservationAdded(newReservation); // Pass the new reservation to the parent
       }

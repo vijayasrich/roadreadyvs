@@ -4,6 +4,7 @@ import {
   getReservationsByUserId,
   deleteReservation,
   approveReservation,
+  cancelReservation,
 } from "../services/ReservationService";
 import { getCarById } from "../services/CarService";
 import { jwtDecode } from "jwt-decode";
@@ -80,6 +81,35 @@ const ReservationList = ({ addedReservation }) => {
     fetchReservations();
   }, [addedReservation]);
 
+  const handleCancel = async (reservationId, status) => {
+    // Debugging line to check the reservation status
+    console.log("Reservation Status:", status);
+  
+    // Check if the status is 'pending'
+    if (status !== "pending") {
+      alert("Only reservations with 'Pending' status can be canceled.");
+      return;
+    }
+  
+    try {
+      // Call the cancelReservation function to cancel the reservation
+      const response = await cancelReservation(reservationId);
+      console.log("Cancel response:", response);  // Log the response from the backend
+  
+      // Update the reservations state to remove the canceled reservation
+      setReservations((prev) =>
+        prev.filter((res) => res.reservationId !== reservationId)
+      );
+  
+      alert("Reservation canceled successfully.");
+    } catch (err) {
+      // Log any errors and show an alert message
+      console.error("Error canceling reservation:", err);
+      alert(err.message || "Failed to cancel reservation.");
+    }
+  };
+  
+  const isCancelEnabled = (status) => status === "pending";
   const handleDelete = async (reservationId, userId) => {
     try {
       await deleteReservation(reservationId);
@@ -96,7 +126,7 @@ const ReservationList = ({ addedReservation }) => {
   const isDeleteEnabled = (pickupDate, status) => {
     const today = new Date();
     const pickup = new Date(pickupDate);
-    return pickup > today && status !== "confirmed"; // Enable delete only if pickup is in the future and status is not confirmed
+    return pickup > today && status !== "confirmed"&& status !== "Canceled"; // Enable delete only if pickup is in the future and status is not confirmed
   };
 
   const handleApprove = async (reservationId) => {
@@ -133,7 +163,7 @@ const ReservationList = ({ addedReservation }) => {
             <th>Dropoff Date</th>
             <th>Status</th>
             {role === "Admin" || role === "Agent" ? <th>User ID</th> : null}
-            {(role === "Admin" || role === "Agent") && <th>Actions</th>}
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -147,39 +177,40 @@ const ReservationList = ({ addedReservation }) => {
                 {role === "Admin" || role === "Agent" ? (
                   <td>{reservation.userId}</td>
                 ) : null}
-                {role === "Admin" || role === "Agent" ? (
-                  <td>
-                    {reservation.status === "pending" && (
-                      <button
-                        onClick={() =>
-                          handleApprove(reservation.reservationId)
-                        }
-                      >
-                        Approve
-                      </button>
-                    )}
-                    <button
-                      onClick={() =>
-                        handleDelete(reservation.reservationId, reservation.userId)
-                      }
-                      disabled={
-                        !isDeleteEnabled(
-                          reservation.pickupDate,
-                          reservation.status
-                        )
-                      }
-                    >
-                      Reject
+                <td>
+                  {role === "Customer" && isCancelEnabled(reservation.status) && (
+                    <button onClick={() => handleCancel(reservation.reservationId, reservation.status)}
+                    disabled={reservation.status !== "pending"} // Disable if not pending
+                  >
+                      Cancel
                     </button>
-                  </td>
-                ) : null}
+                  )}
+                  {role === "Admin" || role === "Agent" ? (
+                    <>
+                      {reservation.status === "pending" && (
+                        <button
+                          onClick={() =>
+                            handleApprove(reservation.reservationId)
+                          }
+                        >
+                          Approve
+                        </button>
+                      )}
+                      <button
+  onClick={() => handleDelete(reservation.reservationId, reservation.userId)}
+  disabled={!isDeleteEnabled(reservation.pickupDate, reservation.status)}
+>
+  Reject
+</button>
+
+                    </>
+                  ) : null}
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td
-                colSpan={role === "Admin" || role === "Agent" ? "6" : "5"}
-              >
+              <td colSpan={role === "Admin" || role === "Agent" ? "6" : "5"}>
                 No reservations found.
               </td>
             </tr>
@@ -189,5 +220,4 @@ const ReservationList = ({ addedReservation }) => {
     </div>
   );
 };
-
 export default ReservationList;

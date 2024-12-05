@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getCarExtraById, updateCarExtra } from "../services/CarExtraService"; // Assuming you have these in your service
+import { getCarExtraById, updateCarExtra } from "../services/CarExtraService"; 
 import "./EditCarExtra.css";
 import {toast} from "react-toastify";
 const EditCarExtra = () => {
