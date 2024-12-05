@@ -54,91 +54,128 @@ const Register = () => {
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit}>
-        {successMessage && <p className="success-message">{successMessage}</p>} {/* Success message */}
-        <div className="form-group">
+    {/*<h2>Register</h2>*/}
+    <form onSubmit={handleSubmit}>
+      {successMessage && <p className="success-message">{successMessage}</p>} {/* Success message */}
+      
+      <div className="form-group">
+        <label htmlFor="username">
           <i className="fas fa-user"></i>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-          />
-        </div>
+          <span>Username</span>
+        </label>
+        <input
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter your username"
+          required
+        />
+      </div>
 
-        <div className="form-group">
+      <div className="form-group">
+        <label htmlFor="email">
           <i className="fas fa-envelope"></i>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
-        </div>
+          <span>Email</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          required
+        />
+      </div>
 
-        <div className="form-group">
+      <div className="form-group">
+        <label htmlFor="password">
           <i className="fas fa-lock"></i>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
-        </div>
+          <span>Password</span>
+        </label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          required
+        />
+      </div>
 
-        <div className="form-group">
-          <label>Role</label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="">Select a role</option>
-            <option value="admin">Admin</option>
-            <option value="agent">Agent</option>
-            <option value="customer">Customer</option>
-          </select>
-        </div>
+      <div className="form-group">
+        <label htmlFor="role">
+          <i className="fas fa-user-circle"></i>
+          <span>Role</span>
+        </label>
+        <select
+          id="role"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          required
+        >
+          <option value="">Select a role</option>
+          <option value="admin">Admin</option>
+          <option value="customer">Customer</option>
+        </select>
+      </div>
 
-        <div className="form-group">
+      <div className="form-group">
+        <label htmlFor="phoneNumber">
           <i className="fas fa-phone"></i>
-          <input
-            type="text"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="Phone Number"
-          />
-        </div>
+          <span>Phone Number</span>
+        </label>
+        <input
+          type="text"
+          id="phoneNumber"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          placeholder="Enter your phone number"
+          required
+        />
+      </div>
 
-        <div className="form-group">
+      <div className="form-group">
+        <label htmlFor="firstName">
           <i className="fas fa-user-circle"></i>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            placeholder="First Name"
-          />
-        </div>
+          <span>First Name</span>
+        </label>
+        <input
+          type="text"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="Enter your first name"
+          required
+        />
+      </div>
 
-        <div className="form-group">
+      <div className="form-group">
+        <label htmlFor="lastName">
           <i className="fas fa-user-circle"></i>
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            placeholder="Last Name"
-          />
-        </div>
+          <span>Last Name</span>
+        </label>
+        <input
+          type="text"
+          id="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Enter your last name"
+          required
+        />
+      </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
+      <button type="submit" disabled={loading} className="btn btn-primary">
+        {loading ? "Registering..." : "Register"}
+      </button>
 
-        <div className="login-link">
-          <p>Already have an account? <a href="/login">Login here</a></p>
-        </div>
-      </form>
-    </div>
-  );
+      <div className="login-link">
+        <p>Already have an account? <a href="/login">Login here</a></p>
+      </div>
+    </form>
+  </div>
+
+);
 };
 
 export default Register;
