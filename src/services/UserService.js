@@ -5,7 +5,7 @@ const API_URL = "https://localhost:7020/api/User";
 
 // Helper function to get the authentication token
 const getAuthToken = () => {
-  return localStorage.getItem("token"); // Assuming token is stored in localStorage
+  return localStorage.getItem("token"); 
 };
 
 // Helper function to decode token and extract user details
@@ -38,7 +38,6 @@ const getUsers = async () => {
   }
 };
 
-// Get a single user by ID (Visible to the user and Admin)
 // For customers, the ID is retrieved from the login token.
 const getUserById = async () => {
   try {
