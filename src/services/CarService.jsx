@@ -100,6 +100,19 @@ const deleteCar = async (id) => {
     throw error; // Ensure errors are propagated
   }
 };
+const getAvailableCars = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/available-cars`, {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}` // Include JWT token if required
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching available cars:", error);
+    throw error;
+  }
+};
 
 
-export { getCars, getCarById, addCar,updateCar,deleteCar };
+export { getCars, getCarById, addCar,updateCar,deleteCar,getAvailableCars };
