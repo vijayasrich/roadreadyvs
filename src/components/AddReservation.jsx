@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getCars } from "../services/CarService"; 
+import { getAvailableCars } from "../services/CarService"; 
 import { getAllCarExtras } from "../services/CarExtraService"; 
 import ClipLoader from "react-spinners/ClipLoader"; // To show a loading spinner
 import moment from "moment"; // To calculate date differences easily
@@ -17,7 +17,6 @@ const AddReservation = ({ onReservationAdded }) => {
   const [totalPrice, setTotalPrice] = useState(0); 
   const [paymentMethod, setPaymentMethod] = useState("");
   const [formData, setFormData] = useState({
-   
     carId: selectedCar?.carId,
     pickupDate: new Date().toISOString().slice(0, 16),
     dropoffDate: new Date().toISOString().slice(0, 16),
@@ -42,6 +41,32 @@ const AddReservation = ({ onReservationAdded }) => {
       }
     }
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Fetch car data
+        const carsData = await getAvailableCars();
+        
+        // Filter cars to only include available ones (assuming 'isAvailable' is the field)
+        const availableCars = carsData.filter((car) => car.isAvailable); // Adjust field name as necessary
+  
+        setCars(availableCars);
+  
+        // Fetch car extras data
+        const carExtrasData = await getAllCarExtras();
+        setCarExtras(carExtrasData);
+      } catch (error) {
+        console.error("Failed to fetch cars or car extras:", error);
+        toast.error("Error fetching data. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
 
   // Fetch cars and car extras on component mount
   useEffect(() => {
@@ -49,7 +74,7 @@ const AddReservation = ({ onReservationAdded }) => {
       setLoading(true);
       try {
         // Fetch car data
-        const carsData = await getCars();
+        const carsData = await getAvailableCars();
         setCars(carsData);
 
         // Fetch car extras data
@@ -172,7 +197,6 @@ const AddReservation = ({ onReservationAdded }) => {
         
       };
 
-      
       if (onReservationAdded && typeof onReservationAdded === "function") {
         onReservationAdded(newReservation); // Pass the new reservation to the parent
       }
@@ -228,18 +252,18 @@ const AddReservation = ({ onReservationAdded }) => {
         <div className="form-group">
           <label>Select Car</label>
           <select
-            name="carId"
-            value={formData.carId}
-            onChange={(e) => handleCarSelect(e.target.value)} // Update selectedCar when dropdown changes
-            required
-          >
-            <option value="">-- Choose a car --</option>
-            {cars.map((car) => (
-              <option key={car.carId} value={car.carId}>
-                {car.name} ({car.model}) - ${car.pricePerDay} per day
-              </option>
-            ))}
-          </select>
+  name="carId"
+  value={formData.carId}
+  onChange={(e) => handleCarSelect(e.target.value)} // Update selectedCar when dropdown changes
+  required
+>
+  <option value="">-- Choose a car --</option>
+  {cars.map((car) => (
+    <option key={car.carId} value={car.carId}>
+      {car.make} {car.model} ({car.year}) - ${car.pricePerDay} per day
+    </option>
+  ))}
+</select>
         </div>
 
         <div className="form-group">
@@ -268,7 +292,7 @@ const AddReservation = ({ onReservationAdded }) => {
               <>
                 <p>
                   Car (
-                  {cars.find((car) => car.carId === selectedCar)?.name}) : $
+                  {cars.find((car) => car.carId === selectedCar)?.name}) : $$
                   {totalPrice}
                 </p>
               </>

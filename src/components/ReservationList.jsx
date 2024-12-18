@@ -81,20 +81,46 @@ const ReservationList = ({ addedReservation }) => {
     fetchReservations();
   }, [addedReservation]);
 
-  const handleCancel = async (reservationId, status) => {
-    // Debugging line to check the reservation status
-    console.log("Reservation Status:", status);
-  
+  {/*const handleCancel = async (reservationId, status) => {
     // Check if the status is 'pending'
     if (status !== "pending") {
       alert("Only reservations with 'Pending' status can be canceled.");
       return;
     }
-  
+
     try {
-      // Call the cancelReservation function to cancel the reservation
       const response = await cancelReservation(reservationId);
-      console.log("Cancel response:", response);  // Log the response from the backend
+      console.log("Cancel response:", response); // Log the response from the backend
+
+      // Update the reservations state to remove the canceled reservation
+      setReservations((prev) =>
+        prev.filter((res) => res.reservationId !== reservationId)
+      );
+
+      alert("Reservation canceled successfully.");
+    } catch (err) {
+      console.error("Error canceling reservation:", err);
+      alert(err.message || "Failed to cancel reservation.");
+    }
+  };*/}
+  const handleCancel = async (reservationId, status) => {
+    // Check if the reservation status is confirmed or pending and show a warning
+    if (status === "confirmed") {
+      const confirmedCancel = window.confirm(
+        "The reservation is confirmed. 50% of the payment is non-refundable. Do you still want to cancel?"
+      );
+      if (!confirmedCancel) return; // Abort the cancellation if user clicks "Cancel"
+    } else if (status === "pending") {
+      const pendingCancel = window.confirm(
+        "The reservation is pending. The full amount is refundable. Do you want to cancel?"
+      );
+      if (!pendingCancel) return; // Abort the cancellation if user clicks "Cancel"
+    }
+  
+    // Proceed with cancellation once confirmed
+    try {
+      const response = await cancelReservation(reservationId);
+      console.log("Cancel response:", response); // Log the response from the backend
   
       // Update the reservations state to remove the canceled reservation
       setReservations((prev) =>
@@ -103,20 +129,24 @@ const ReservationList = ({ addedReservation }) => {
   
       alert("Reservation canceled successfully.");
     } catch (err) {
-      // Log any errors and show an alert message
       console.error("Error canceling reservation:", err);
       alert(err.message || "Failed to cancel reservation.");
     }
   };
   
-  const isCancelEnabled = (status) => status === "pending";
+
+  const isCancelEnabled = (pickupDate, status) => {
+    const today = new Date();
+    const pickup = new Date(pickupDate);
+    return pickup > today && status !== "Canceled"; // Enable cancel only if pickup is in the future and status is not 'Canceled'
+  };
+
   const handleDelete = async (reservationId, userId) => {
     try {
       await deleteReservation(reservationId);
       setReservations((prev) =>
         prev.filter((res) => res.reservationId !== reservationId)
       );
-      // Notify customer after rejecting reservation
       alert(`Reservation for user ID: ${userId} has been rejected.`);
     } catch (err) {
       console.error("Error deleting reservation:", err);
@@ -126,7 +156,7 @@ const ReservationList = ({ addedReservation }) => {
   const isDeleteEnabled = (pickupDate, status) => {
     const today = new Date();
     const pickup = new Date(pickupDate);
-    return pickup > today && status !== "confirmed"&& status !== "Canceled"; // Enable delete only if pickup is in the future and status is not confirmed
+    return pickup > today && status !== "confirmed" && status !== "Canceled"; // Enable delete only if pickup is in the future and status is not confirmed or canceled
   };
 
   const handleApprove = async (reservationId) => {
@@ -178,10 +208,11 @@ const ReservationList = ({ addedReservation }) => {
                   <td>{reservation.userId}</td>
                 ) : null}
                 <td>
-                  {role === "Customer" && isCancelEnabled(reservation.status) && (
-                    <button onClick={() => handleCancel(reservation.reservationId, reservation.status)}
-                    disabled={reservation.status !== "pending"} // Disable if not pending
-                  >
+                  {role === "Customer" && isCancelEnabled(reservation.pickupDate, reservation.status) && (
+                    <button
+                      onClick={() => handleCancel(reservation.reservationId, reservation.status)}
+                      disabled={reservation.status === "Canceled"} // Disable if status is 'Canceled'
+                    >
                       Cancel
                     </button>
                   )}
@@ -197,12 +228,11 @@ const ReservationList = ({ addedReservation }) => {
                         </button>
                       )}
                       <button
-  onClick={() => handleDelete(reservation.reservationId, reservation.userId)}
-  disabled={!isDeleteEnabled(reservation.pickupDate, reservation.status)}
->
-  Reject
-</button>
-
+                        onClick={() => handleDelete(reservation.reservationId, reservation.userId)}
+                        disabled={!isDeleteEnabled(reservation.pickupDate, reservation.status)}
+                      >
+                        Reject
+                      </button>
                     </>
                   ) : null}
                 </td>
@@ -220,4 +250,5 @@ const ReservationList = ({ addedReservation }) => {
     </div>
   );
 };
+
 export default ReservationList;
